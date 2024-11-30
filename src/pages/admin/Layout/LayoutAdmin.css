@@ -1,0 +1,21 @@
+/* Navbar Samping */
+.sidebar-layout-admin {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 58px 148px 58px;
+    background-color: #FAFAFA;
+}
+
+.sidebar-layout-admin.mini {
+    width: 96px;
+    align-items: center;
+}
+
+.sidebar-layout-admin .active-link .icon {
+    filter: grayscale(1) brightness(0.4) sepia(1) hue-rotate(-15deg) saturate(6) contrast(1.4);
+}
+
+.sidebar-layout-admin .active-link .text {
+    color: #C40C0C !important;
+}
