@@ -74,6 +74,13 @@ function Pengaduan() {
                                     </div>
                                 </div>
 
+                                <div style={{ marginBottom: "32px" }}>
+                                    <div>
+                                        <label htmlFor="formFile" style={{ marginBottom: "8px" }}>Default file input example</label>
+                                        <input className="form-control" type="file" id="inputGanbar" accept="image/*" style={{ padding: "9.5px 12px", marginBottom: "16px" }} required />
+                                    </div>
+                                </div>
+
                                 <button type="submit" className="btn text-white col-12 fw-bold" style={{ backgroundColor: "#C40C0C", padding: "9.5px" }}>Lapor!</button>
                             </form>
                         </div>
