@@ -27,7 +27,7 @@ export const logOut = async () => {
     try {
         const response = await axios.post(
             `${import.meta.env.VITE_BASE_URL}/auth/logout`,
-            null, // Body kosong karena hanya melakukan logout
+            null, 
             {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -35,13 +35,63 @@ export const logOut = async () => {
             }
         );
 
-        // Menghapus token dari localStorage setelah logout berhasil
+      
         localStorage.removeItem("token");
         return response.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || "Logout failed");
     }
 };
+
+
+export const getProfile = async () => {
+  try {
+    const token = localStorage.getItem("token"); 
+    if (!token) {
+      throw new Error("Token tidak ditemukan. Silakan login kembali.");
+    }
+
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`, 
+      },
+    });
+
+    return response.data.data; 
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Gagal memuat data profil");
+  }
+};
+
+
+
+export const changePassword = async (old_password, new_password) => {
+  try {
+      const token = localStorage.getItem("token"); 
+
+      const response = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/auth/change-password`,
+          {
+              old_password, 
+              new_password,    
+          },
+          {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+              },
+          }
+      );
+
+      return response.data; 
+  } catch (error) {
+      throw new Error(
+          error.response?.data?.message || "Gagal mengubah kata sandi"
+      );
+  }
+};
+
+
 
 
 // Dashboar admin
@@ -69,35 +119,35 @@ export const getLaporan = async () => {
 
 export const deleteLaporan = async (id) => {
     try {
-        // Ambil token Bearer dari localStorage
-        const token = localStorage.getItem('token'); // Ganti 'token' dengan nama key token yang sesuai
+      
+        const token = localStorage.getItem('token'); 
 
         if (!token) {
             throw new Error('Token tidak ditemukan');
         }
 
-        // Kirim permintaan dengan Bearer Token di header dan ID dalam body
+        
         const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/laporan/delete`, {
-            data: { id }, // Mengirim ID dalam body sebagai JSON
+            data: { id }, 
             headers: {
-                'Authorization': `Bearer ${token}`, // Menambahkan Bearer token di header
+                'Authorization': `Bearer ${token}`, 
                 'Content-Type': 'application/json',
             },
         });
 
-        return response.data; // Mengembalikan data respons jika berhasil
+        return response.data; 
     } catch (error) {
         console.error('Error deleting laporan:', error);
-        throw error; // Menangkap error jika permintaan gagal
+        throw error; 
     }
 };
 
 
 
 
+
+
 // Public
-
-
 
 export const laporPengaduan = async (data) => {
   try {
@@ -203,7 +253,7 @@ export const daftarAduan = async () => {
 
 export const updateLaporanStatus = async (id, status) => {
     try {
-        const token = localStorage.getItem("token"); // Ambil token Bearer dari localStorage
+        const token = localStorage.getItem("token"); 
 
         if (!token) {
             toast.error("Error: Token autentikasi tidak ditemukan. Silakan login kembali.");
@@ -215,7 +265,7 @@ export const updateLaporanStatus = async (id, status) => {
             { id, status }, // Body permintaan
             {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Tambahkan token ke header
+                    Authorization: `Bearer ${token}`, 
                     "Content-Type": "application/json",
                 },
             }
