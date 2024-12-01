@@ -24,71 +24,71 @@ export const loginAdmin = async (username, password, callback) => {
 };
 
 export const logOut = async () => {
-  try {
-      const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/auth/logout`,
-          null, // Body kosong karena hanya melakukan logout
-          {
-              headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-          }
-      );
+    try {
+        const response = await axios.post(
+            `${import.meta.env.VITE_BASE_URL}/auth/logout`,
+            null, // Body kosong karena hanya melakukan logout
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            }
+        );
 
-      // Menghapus token dari localStorage setelah logout berhasil
-      localStorage.removeItem("token");
-      return response.data;
-  } catch (error) {
-      throw new Error(error.response?.data?.message || "Logout failed");
-  }
+        // Menghapus token dari localStorage setelah logout berhasil
+        localStorage.removeItem("token");
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || "Logout failed");
+    }
 };
 
 
 // Dashboar admin
 export const getChartData = async () => {
-  try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-chart`);
-      return response.data.data; 
-  } catch (error) {
-      throw new Error(error.response?.data?.message || "Gagal mengambil data chart");
-  }
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-chart`);
+        return response.data.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || "Gagal mengambil data chart");
+    }
 };
 
 
 export const getLaporan = async () => {
-  try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-all`);
-      return response.data.data; 
-  } catch (error) {
-      throw new Error(error.response?.data?.message || "Gagal memuat data laporan");
-  }
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-all`);
+        return response.data.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || "Gagal memuat data laporan");
+    }
 };
 
 
 
 export const deleteLaporan = async (id) => {
-  try {
-    // Ambil token Bearer dari localStorage
-    const token = localStorage.getItem('token'); // Ganti 'token' dengan nama key token yang sesuai
+    try {
+        // Ambil token Bearer dari localStorage
+        const token = localStorage.getItem('token'); // Ganti 'token' dengan nama key token yang sesuai
 
-    if (!token) {
-      throw new Error('Token tidak ditemukan');
+        if (!token) {
+            throw new Error('Token tidak ditemukan');
+        }
+
+        // Kirim permintaan dengan Bearer Token di header dan ID dalam body
+        const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/laporan/delete`, {
+            data: { id }, // Mengirim ID dalam body sebagai JSON
+            headers: {
+                'Authorization': `Bearer ${token}`, // Menambahkan Bearer token di header
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data; // Mengembalikan data respons jika berhasil
+    } catch (error) {
+        console.error('Error deleting laporan:', error);
+        throw error; // Menangkap error jika permintaan gagal
     }
-
-    // Kirim permintaan dengan Bearer Token di header dan ID dalam body
-    const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/laporan/delete`, {
-      data: { id }, // Mengirim ID dalam body sebagai JSON
-      headers: {
-        'Authorization': `Bearer ${token}`, // Menambahkan Bearer token di header
-        'Content-Type': 'application/json', 
-      },
-    });
-
-    return response.data; // Mengembalikan data respons jika berhasil
-  } catch (error) {
-    console.error('Error deleting laporan:', error);
-    throw error; // Menangkap error jika permintaan gagal
-  }
 };
 
 
@@ -113,11 +113,11 @@ export const deleteLaporan = async (id) => {
 //           }
 //         }
 //       );
-  
+
 //       if (response.data) {
 //         toast.success("Laporan berhasil dimuat!");
 //       }
-  
+
 //       callback(response.data);
 //     } catch (error) {
 //       if (axios.isAxiosError(error)) {
@@ -133,7 +133,7 @@ export const deleteLaporan = async (id) => {
 //     const formData = new FormData();
 //     formData.append("photo", photo);
 //     formData.append("id", id); // Menggunakan ID dinamis
-  
+
 //     try {
 //       const response = await axios.post(
 //         "https://laporke-desa-banteran.web.id/laporan/upload-photo",
@@ -156,45 +156,84 @@ export const deleteLaporan = async (id) => {
 
 export const daftarAduan = async () => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-all`);
-      toast.success('Daftar aduan berhasil dimuat!');
-      return data;
+        const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-all`);
+        toast.success('Daftar aduan berhasil dimuat!');
+        return data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          toast.error(`Error: ${error.response.data.message || 'Gagal memuat daftar aduan'}`);
-        } else if (error.request) {
-          toast.error('Error: Tidak ada respons dari server. Periksa koneksi Anda.');
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                toast.error(`Error: ${error.response.data.message || 'Gagal memuat daftar aduan'}`);
+            } else if (error.request) {
+                toast.error('Error: Tidak ada respons dari server. Periksa koneksi Anda.');
+            } else {
+                toast.error(`Error: ${error.message}`);
+            }
         } else {
-          toast.error(`Error: ${error.message}`);
+            toast.error(`Error: ${error.message}`);
         }
-      } else {
-        toast.error(`Error: ${error.message}`);
-      }
-      console.error(error);
-      throw error;
+        console.error(error);
+        throw error;
     }
-  };
+};
 
-
-  export const getImage = async () => {
+export const updateLaporanStatus = async (id, status) => {
     try {
-      const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-all`);
-      toast.success('Daftar aduan berhasil dimuat!');
-      return data;
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          toast.error(`Error: ${error.response.data.message || 'Gagal memuat daftar aduan'}`);
-        } else if (error.request) {
-          toast.error('Error: Tidak ada respons dari server. Periksa koneksi Anda.');
-        } else {
-          toast.error(`Error: ${error.message}`);
+        const token = localStorage.getItem("token"); // Ambil token Bearer dari localStorage
+
+        if (!token) {
+            toast.error("Error: Token autentikasi tidak ditemukan. Silakan login kembali.");
+            throw new Error("Token tidak ditemukan");
         }
-      } else {
-        toast.error(`Error: ${error.message}`);
-      }
-      console.error(error);
-      throw error;
+
+        const response = await axios.put(
+            `${import.meta.env.VITE_BASE_URL}/laporan/update-status`,
+            { id, status }, // Body permintaan
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Tambahkan token ke header
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        // Jika permintaan berhasil
+        toast.success(`Status laporan berhasil diperbarui.`);
+        return response.data;
+    } catch (error) {
+        // Penanganan berbagai error
+        if (error.response) {
+            // Error dari server
+            const statusCode = error.response.status;
+            const errorMessage = error.response.data?.message || "Terjadi kesalahan pada server.";
+
+            switch (statusCode) {
+                case 400:
+                    toast.error(`Bad Request: ${errorMessage}`);
+                    break;
+                case 401:
+                    toast.error("Unauthorized: Token autentikasi tidak valid atau telah kedaluwarsa. Silakan login kembali.");
+                    break;
+                case 403:
+                    toast.error("Forbidden: Anda tidak memiliki izin untuk melakukan aksi ini.");
+                    break;
+                case 404:
+                    toast.error("Not Found: Laporan tidak ditemukan atau endpoint tidak tersedia.");
+                    break;
+                case 500:
+                    toast.error("Internal Server Error: Terjadi kesalahan pada server. Silakan coba lagi nanti.");
+                    break;
+                default:
+                    toast.error(`Error ${statusCode}: ${errorMessage}`);
+            }
+        } else if (error.request) {
+            // Error dari jaringan
+            toast.error("Network Error: Tidak dapat terhubung ke server. Periksa koneksi internet Anda.");
+        } else {
+            // Error lainnya
+            toast.error(`Error: ${error.message || "Terjadi kesalahan yang tidak diketahui."}`);
+        }
+
+        // Lempar error untuk penanganan lebih lanjut di komponen pemanggil
+        throw error;
     }
-  };
+};
