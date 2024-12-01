@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { toast } from "react-toastify" 
+import { toast } from "react-toastify"
 import styled from "styled-components"
 import Images from "../../../images"
 import LogoLocation from "../../../assets/LogoLokasi.svg"
@@ -26,9 +26,9 @@ function DaftarAduan() {
     useEffect(() => {
         const fetchAduan = async () => {
             try {
-                const data = await daftarAduan() 
-                setAduan(data.data) 
-            // eslint-disable-next-line no-unused-vars
+                const data = await daftarAduan()
+                setAduan(data.data)
+                // eslint-disable-next-line no-unused-vars
             } catch (error) {
                 toast.error('Gagal memuat daftar aduan');
             }
@@ -79,56 +79,60 @@ function DaftarAduan() {
                     </div>
                 </div>
 
-            ) 
-            : (
-                <>
-                    {/* Jika hasil pencarian tidak ditemukan */}
-                    {filteredAduan.length === 0 ? (
-                        <div className="row mx-auto mb-5 align-items-center" style={{ maxWidth: "1009px" }}>
-                            <div className="col-10 col-sm-6 col-md-5 col-lg-auto px-0 mx-auto mx-md-0">
-                                <img src={Images.ImagesTidakAdaPencarian} className="w-100" />
-                            </div>
-                            <div className="col-12 col-md px-0 mt-4 mt-md-0 mx-auto ms-md-4 ms-xl-auto me-md-0 text-center text-md-start" style={{ maxWidth: "570px" }}>
-                                <h2 className="mb-4 fw-semibold" style={{ lineHeight: "42px" }}>Aduan Tidak Ditemukan</h2>
-                                <p className="mb-4" style={{ maxWidth: "524px", fontSize: "18px", lineHeight: "31px" }}>Maaf, kami tidak menemukan aduan yang sesuai dengan kata kunci yang Anda gunakan.</p>
-                                <button type="button" className="btn border-0 rounded-4 text-white fw-semibold" style={{ padding: "8px 25.54px", backgroundColor: "#C40C0C" }} onClick={() => setSearchText("")}>Reset Pencarian</button>
-                            </div>
-                        </div>
-
-                    ) : (
-                        // Jika ada laporan yang sesuai dengan pencarian
-                        filteredAduan.map((item) => (
-                            <div key={item.id} className="card border-0 rounded-4 shadow mx-auto p-4 mb-3" style={{ maxWidth: "980.33px" }}>
-                                <div className="row mx-0 align-items-center">
-                                    {/* column gambar */}
-                                    <div className="col-12 mx-auto ms-md-0 me-md-3 px-0 rounded-4" style={{ maxWidth: "274.33px", height: "222px", background: `url(${item.photo}) no-repeat center`, backgroundSize: "cover" }}></div>
-
-                                    {/* column content */}
-                                    <div className="col-12 col-md px-0 mt-3 mt-md-0">
-                                        <div className="row mx-0">
-                                            <div className="col-12 col-sm px-0">
-                                                <h4 className="mb-3 lh-base">{item.title}</h4>
-                                            </div>
-                                            <div className="col-auto px-3 py-1 rounded-pill mb-3 mb-sm-auto ms-sm-3" style={{ backgroundColor: item.status === "open" ? "#FCDDCC" : item.status === "pending" ? "#FFF7CC" : item.status === "closed" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: item.status === "open" ? "#C40C0C" : item.status === "pending" ? "#DBA000" : item.status === "closed" ? "#00C17A" : "inherit" }}>{item.status === "open" ? "Belum diproses" : item.status === "pending" ? "Sedang diproses" : item.status === "closed" ? "Telah selesai" : item.status}</div>
-                                        </div>
-
-                                        <div className="row mx-0 mb-3">
-                                            <div className="col-auto px-0">
-                                                <img src={LogoLocation} className="me-1" />
-                                            </div>
-                                            <div className="col px-0">
-                                                <p className="mb-0">{item.location}</p>
-                                            </div>
-                                        </div>
-
-                                        <button type="button" className="btn fw-semibold border-0 py-2 px-4 rounded-4" style={{ backgroundColor: "#C40C0C", color: "white" }} data-bs-toggle="modal" data-bs-target="#ModalDetailAduan" onClick={() => handleDetailClick(item.id)}>Lihat Detail</button>
-                                    </div>
+            )
+                : (
+                    <>
+                        {/* Jika hasil pencarian tidak ditemukan */}
+                        {filteredAduan.length === 0 ? (
+                            <div className="row mx-auto mb-5 align-items-center" style={{ maxWidth: "1009px" }}>
+                                <div className="col-10 col-sm-6 col-md-5 col-lg-auto px-0 mx-auto mx-md-0">
+                                    <img src={Images.ImagesTidakAdaPencarian} className="w-100" />
+                                </div>
+                                <div className="col-12 col-md px-0 mt-4 mt-md-0 mx-auto ms-md-4 ms-xl-auto me-md-0 text-center text-md-start" style={{ maxWidth: "570px" }}>
+                                    <h2 className="mb-4 fw-semibold" style={{ lineHeight: "42px" }}>Aduan Tidak Ditemukan</h2>
+                                    <p className="mb-4" style={{ maxWidth: "524px", fontSize: "18px", lineHeight: "31px" }}>Maaf, kami tidak menemukan aduan yang sesuai dengan kata kunci yang Anda gunakan.</p>
+                                    <button type="button" className="btn border-0 rounded-4 text-white fw-semibold" style={{ padding: "8px 25.54px", backgroundColor: "#C40C0C" }} onClick={() => setSearchText("")}>Reset Pencarian</button>
                                 </div>
                             </div>
-                        ))
-                    )}
-                </>
-            )}
+
+                        ) : (
+                            // Jika ada laporan yang sesuai dengan pencarian
+                            filteredAduan.map((item) => (
+                                <div key={item.id} className="card border-0 rounded-4 shadow mx-auto p-4 mb-3" style={{ maxWidth: "980.33px" }}>
+                                    <div className="row mx-0 align-items-center">
+                                        {/* column gambar */}
+                                        <div className="col-12 mx-auto ms-md-0 me-md-3 px-0" style={{ maxWidth: "274.33px", height: "222px" }}>
+                                            <a href={`https://laporke-desa-banteran.web.id/static/uploads/${item.photo}`} target="_blank">
+                                                <img src={`https://laporke-desa-banteran.web.id/static/uploads/${item.photo}`} className="object-fit-cover w-100 h-100 rounded-4" />
+                                            </a>
+                                        </div>
+
+                                        {/* column content */}
+                                        <div className="col-12 col-md px-0 mt-3 mt-md-0">
+                                            <div className="row mx-0">
+                                                <div className="col-12 col-sm px-0">
+                                                    <h4 className="mb-3 lh-base">{item.title}</h4>
+                                                </div>
+                                                <div className="col-auto px-3 py-1 rounded-pill mb-3 mb-sm-auto ms-sm-3" style={{ backgroundColor: item.status === "pending" ? "#FCDDCC" : item.status === "open" ? "#FFF7CC" : item.status === "closed" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: item.status === "pending" ? "#C40C0C" : item.status === "open" ? "#DBA000" : item.status === "closed" ? "#00C17A" : "inherit" }}>{item.status === "pending" ? "Belum diproses" : item.status === "open" ? "Sedang diproses" : item.status === "closed" ? "Telah selesai" : item.status}</div>
+                                            </div>
+
+                                            <div className="row mx-0 mb-3">
+                                                <div className="col-auto px-0">
+                                                    <img src={LogoLocation} className="me-1" />
+                                                </div>
+                                                <div className="col px-0">
+                                                    <p className="mb-0">{item.location}</p>
+                                                </div>
+                                            </div>
+
+                                            <button type="button" className="btn fw-semibold border-0 py-2 px-4 rounded-4" style={{ backgroundColor: "#C40C0C", color: "white" }} data-bs-toggle="modal" data-bs-target="#ModalDetailAduan" onClick={() => handleDetailClick(item.id)}>Lihat Detail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </>
+                )}
 
             {/* Modal Detail Aduan */}
             <div className="modal fade" id="ModalDetailAduan" data-bs-backdrop="static" style={{ backdropFilter: "blur(5px)", backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
@@ -147,9 +151,11 @@ function DaftarAduan() {
                                     <div className="col-12 col-md-auto px-0 me-md-4">
                                         <p className="mb-3" style={{ color: "#828282", fontSize: "18px" }}>Gambar Laporan</p>
                                         <ImageContainer className="mx-auto mb-3">
-                                            <img src={selectedAduan.photo} className="object-fit-cover w-100 h-100 rounded-4" />
+                                            <a href={`https://laporke-desa-banteran.web.id/static/uploads/${selectedAduan.photo}`} target="_blank">
+                                                <img src={`https://laporke-desa-banteran.web.id/static/uploads/${selectedAduan.photo}`} className="object-fit-cover w-100 h-100 rounded-4" />
+                                            </a>
                                         </ImageContainer>
-                                        <div className="d-inline-flex px-3 py-1 rounded-pill mb-3" style={{ backgroundColor: selectedAduan.status === "open" ? "#FCDDCC" : selectedAduan.status === "pending" ? "#FFF7CC" : selectedAduan.status === "closed" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: selectedAduan.status === "open" ? "#C40C0C" : selectedAduan.status === "pending" ? "#DBA000" : selectedAduan.status === "closed" ? "#00C17A" : "inherit" }}>{selectedAduan.status === "open" ? "Belum diproses" : selectedAduan.status === "pending" ? "Sedang diproses" : selectedAduan.status === "closed" ? "Telah selesai" : selectedAduan.status}</div>
+                                        <div className="d-inline-flex px-3 py-1 rounded-pill mb-3" style={{ backgroundColor: selectedAduan.status === "pending" ? "#FCDDCC" : selectedAduan.status === "open" ? "#FFF7CC" : selectedAduan.status === "closed" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: selectedAduan.status === "pending" ? "#C40C0C" : selectedAduan.status === "open" ? "#DBA000" : selectedAduan.status === "closed" ? "#00C17A" : "inherit" }}>{selectedAduan.status === "pending" ? "Belum diproses" : selectedAduan.status === "open" ? "Sedang diproses" : selectedAduan.status === "closed" ? "Telah selesai" : selectedAduan.status}</div>
                                     </div>
 
                                     <div className="col-12 col-md px-0">
