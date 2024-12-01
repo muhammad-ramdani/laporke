@@ -47,7 +47,7 @@ function Dashboard() {
                 <div className="card rounded-4 border-0 text-white" style={{ backgroundColor: "#FE6400" }}>
                     <div className="card-body" style={{ padding: "32px" }}>
                         <img src={Images.LogoLaporanBelumDiproses} style={{ marginBottom: "34px" }} />
-                        <h2>{chartData.open}</h2>
+                        <h2>{chartData.pending}</h2>
                         <span>Belum Diproses</span>
                     </div>
                 </div>
@@ -56,7 +56,7 @@ function Dashboard() {
                 <div className="card rounded-4 border-0 text-white" style={{ backgroundColor: "#FF8A07" }}>
                     <div className="card-body" style={{ padding: "32px" }}>
                         <img src={Images.LogoLaporanSedangDiproses} style={{ marginBottom: "34px" }} />
-                        <h2>{chartData.pending}</h2>
+                        <h2>{chartData.open}</h2>
                         <span>Sedang Diproses</span>
                     </div>
                 </div>

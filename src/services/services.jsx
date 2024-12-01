@@ -2,54 +2,67 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
+// Buat instance Axios
+const api = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL,
+});
 
-export const loginAdmin = async (username, password) => {
-  try {
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-      username,
-      password,
-    });
 
-    if (response.data && response.data.access_token) {
-      return {
-        success: true,
-        data: response.data,
-      };
+// Tambahkan interceptor untuk menangani respons
+api.interceptors.response.use(
+    (response) => {
+        // Jika respons sukses, kembalikan data
+        return response;
+    },
+    (error) => {
+        // Jika respons gagal, cek apakah statusnya 401
+        if (error.response && error.response.status === 401) {
+            // Token sudah kadaluwarsa atau tidak valid
+            toast.error("Sesi Anda telah berakhir. Silakan login kembali.");
+
+            // Hapus token dari localStorage
+            localStorage.removeItem("token");
+
+            // Arahkan pengguna ke halaman login
+            window.location.href = "/login";
+        }
+
+        // Lempar error agar bisa ditangani lebih lanjut
+        return Promise.reject(error);
     }
+);
 
-    return {
-      success: false,
-      message: "Login gagal, token tidak ditemukan.",
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return {
-        success: false,
-        message: error.response?.data?.message || "Kesalahan server, silakan coba lagi.",
-      };
+
+export const loginAdmin = async (username, password, callback) => {
+    try {
+        const response = await api.post("/auth/login", {
+            username,
+            password,
+        });
+        if (response.data && response.data.access_token) {
+            localStorage.setItem("token", response.data.access_token);
+            toast.success("Login successful!");
+        }
+
+        callback(response.data);
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            toast.error(error.response?.data?.message || error.message);
+            return;
+        }
+        toast.error(error.message);
     }
-    return {
-      success: false,
-      message: "Terjadi kesalahan jaringan.",
-    };
-  }
 };
-
 
 
 export const logOut = async () => {
     try {
-        const response = await axios.post(
-            `${import.meta.env.VITE_BASE_URL}/auth/logout`,
-            null, 
-            {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            }
-        );
+        const response = await api.post("/auth/logout", null, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
 
-      
         localStorage.removeItem("token");
         return response.data;
     } catch (error) {
@@ -59,59 +72,55 @@ export const logOut = async () => {
 
 
 export const getProfile = async () => {
-  try {
-    const token = localStorage.getItem("token"); 
-    if (!token) {
-      throw new Error("Token tidak ditemukan. Silakan login kembali.");
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            throw new Error("Token tidak ditemukan. Silakan login kembali.");
+        }
+
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return response.data.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || "Gagal memuat data profil");
     }
-
-    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/auth/profile`, {
-      headers: {
-        Authorization: `Bearer ${token}`, 
-      },
-    });
-
-    return response.data.data; 
-  } catch (error) {
-    throw new Error(error.response?.data?.message || "Gagal memuat data profil");
-  }
 };
-
 
 
 export const changePassword = async (old_password, new_password) => {
-  try {
-      const token = localStorage.getItem("token"); 
+    try {
+        const token = localStorage.getItem("token");
 
-      const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/auth/change-password`,
-          {
-              old_password, 
-              new_password,    
-          },
-          {
-              headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-              },
-          }
-      );
+        const response = await axios.post(
+            `${import.meta.env.VITE_BASE_URL}/auth/change-password`,
+            {
+                old_password,
+                new_password,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            }
+        );
 
-      return response.data; 
-  } catch (error) {
-      throw new Error(
-          error.response?.data?.message || "Gagal mengubah kata sandi"
-      );
-  }
+        return response.data;
+    } catch (error) {
+        throw new Error(
+            error.response?.data?.message || "Gagal mengubah kata sandi"
+        );
+    }
 };
 
 
-
-
-// Dashboar admin
 export const getChartData = async () => {
     try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-chart`);
+        const response = await api.get("/laporan/get-chart");
         return response.data.data;
     } catch (error) {
         throw new Error(error.response?.data?.message || "Gagal mengambil data chart");
@@ -129,118 +138,51 @@ export const getLaporan = async () => {
 };
 
 
-
-
 export const deleteLaporan = async (id) => {
     try {
-      
-        const token = localStorage.getItem('token'); 
+
+        const token = localStorage.getItem('token');
 
         if (!token) {
             throw new Error('Token tidak ditemukan');
         }
 
-        
+
         const response = await axios.delete(`${import.meta.env.VITE_BASE_URL}/laporan/delete`, {
-            data: { id }, 
+            data: { id },
             headers: {
-                'Authorization': `Bearer ${token}`, 
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         });
 
-        return response.data; 
+        return response.data;
     } catch (error) {
         console.error('Error deleting laporan:', error);
-        throw error; 
+        throw error;
     }
 };
 
 
-
-
-
-
 // Public
-
 export const laporPengaduan = async (data) => {
-  try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/laporan/create`,
-      data, 
-      {
-        headers: {
-          "Content-Type": "application/json", 
-        },
-      }
-    );
+    try {
+        const response = await axios.post(
+            `${import.meta.env.VITE_BASE_URL}/laporan/create`,
+            data,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
 
-    return response.data; 
-  } catch (error) {
-    console.error("Error saat mengirim laporan:", error);
-    throw error;
-  }
+        return response.data;
+    } catch (error) {
+        console.error("Error saat mengirim laporan:", error);
+        throw error;
+    }
 };
-
-
-// export const laporPengaduan = async (data, id, callback) => {
-//     try {
-//       const response = await axios.post(
-//         `${import.meta.env.VITE_BASE_URL}/laporan/create`,
-//         {
-//           name: data.name,
-//           title: data.title,
-//           description: data.description,
-//           photo: data.photo,
-//           location: data.location,
-//           id: id,  // ID laporan yang disertakan
-//         },
-//         {
-//           headers: {
-//             'Content-Type': 'application/json',
-//             'User-Agent': 'insomnia/10.0.0',  // User-Agent bisa disesuaikan
-//           }
-//         }
-//       );
-
-//       if (response.data) {
-//         toast.success("Laporan berhasil dimuat!");
-//       }
-
-//       callback(response.data);
-//     } catch (error) {
-//       if (axios.isAxiosError(error)) {
-//         toast.error(error.response?.data?.message || error.message);
-//         return;
-//       }
-//       toast.error(error.message);
-//     }
-//   };
-
-
-//   export const uploadPhoto = async (photo, id) => {
-//     const formData = new FormData();
-//     formData.append("photo", photo);
-//     formData.append("id", id); // Menggunakan ID dinamis
-
-//     try {
-//       const response = await axios.post(
-//         "https://laporke-desa-banteran.web.id/laporan/upload-photo",
-//         formData,
-//         {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//           },
-//         }
-//       );
-//       return response.data; // Mengembalikan data respon, misalnya URL foto
-//     } catch (error) {
-//       const message = error.response?.data?.message || error.message || "Gagal mengunggah foto";
-//       toast.error(`Error: ${message}`);
-//       console.error(error);
-//       throw error;
-//     }
-//   };
 
 
 export const daftarAduan = async () => {
@@ -265,9 +207,10 @@ export const daftarAduan = async () => {
     }
 };
 
+
 export const updateLaporanStatus = async (id, status) => {
     try {
-        const token = localStorage.getItem("token"); 
+        const token = localStorage.getItem("token");
 
         if (!token) {
             toast.error("Error: Token autentikasi tidak ditemukan. Silakan login kembali.");
@@ -279,7 +222,7 @@ export const updateLaporanStatus = async (id, status) => {
             { id, status }, // Body permintaan
             {
                 headers: {
-                    Authorization: `Bearer ${token}`, 
+                    Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
             }
