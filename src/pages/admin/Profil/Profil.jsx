@@ -1,14 +1,53 @@
-import Images from "../../../images"
-import { useState } from "react"
+import { useState, useEffect } from "react";
+import Images from "../../../images";
+import { getProfile, changePassword } from "../../../services/services";
 
 function Profil() {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
-    const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const profileData = await getProfile();
+                setEmail(profileData.email || "");
+                setUsername(profileData.username || "");
+            } catch (error) {
+                console.error("Gagal memuat profil:", error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+    const handleSavePassword = async () => {
+        try {
+            if (!currentPassword || !newPassword) {
+                alert("Kata sandi sekarang dan kata sandi baru harus diisi.");
+                return;
+            }
+    
+            const response = await changePassword(currentPassword, newPassword);
+            alert(response.message || "Kata sandi berhasil diubah");
+            setCurrentPassword(""); // Reset input
+            setNewPassword("");     // Reset input
+        } catch (error) {
+            alert(error.message || "Gagal mengubah kata sandi");
+        }
+    };
+    
+
+    if (loading) {
+        return <p>Memuat data...</p>;
+    }
 
     return (
         <>
@@ -25,97 +64,97 @@ function Profil() {
                     <div className="tab-content mt-5">
                         <div className="tab-pane show active" id="edit-profil">
                             <div>
-                                <label htmlFor="imputJudulLaporan" style={{ marginBottom: "8px" }}>Email</label>
-                                <input type="Email" className="form-control" id="imputJudulLaporan" placeholder="Email" style={{ padding: "9.5px 12px", marginBottom: "16px" }} />
+                                <label htmlFor="inputEmail" style={{ marginBottom: "8px" }}>Email</label>
+                                <input
+                                    type="email"
+                                    className="form-control"
+                                    id="inputEmail"
+                                    placeholder="Email"
+                                    style={{ padding: "9.5px 12px", marginBottom: "16px" }}
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                />
                             </div>
                             <div>
-                                <label htmlFor="imputJudulLaporan" style={{ marginBottom: "8px" }}>Username</label>
-                                <input type="text" className="form-control" id="imputJudulLaporan" placeholder="Username" style={{ padding: "9.5px 12px", marginBottom: "16px" }} />
+                                <label htmlFor="inputUsername" style={{ marginBottom: "8px" }}>Username</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="inputUsername"
+                                    placeholder="Username"
+                                    style={{ padding: "9.5px 12px", marginBottom: "16px" }}
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
                             </div>
                             <div className="d-flex mt-5 justify-content-end">
-                                <button type="button" className="btn text-white fw-semibold rounded-4" style={{ backgroundColor: "#C40C0C", padding: "9.5px 50px" }}>Simpan</button>
+                                <button
+                                    type="button"
+                                    className="btn text-white fw-semibold rounded-4"
+                                    style={{ backgroundColor: "#C40C0C", padding: "9.5px 50px" }}
+                                    onClick={() => console.log("Simpan perubahan profil")}
+                                >
+                                    Simpan
+                                </button>
                             </div>
                         </div>
                         <div className="tab-pane" id="keamanan">
                             <div>
-                                {/* Kata Sandi Sekarang */}
-                                <div>
-                                    <label style={{ marginBottom: "8px" }}>Kata Sandi Sekarang</label>
-                                    <div className="input-group">
-                                        <input
-                                            type={showCurrentPassword ? "text" : "password"}
-                                            className="form-control rounded-start-4 border-end-0"
-                                            style={{ padding: "9.5px 12px", marginBottom: "16px" }}
-                                            required
-                                            value={currentPassword}
-                                            onChange={(e) => setCurrentPassword(e.target.value)}
-                                        />
-                                        <button
-                                            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                            className="btn rounded-end-4 border border-start-0"
-                                            type="button"
-                                            style={{ maxHeight: "45px" }}
-                                        >
-                                            <img src={showCurrentPassword ? Images.EyeSlash : Images.Eye} alt="Toggle visibility" />
-                                        </button>
-                                    </div>
+                                <label style={{ marginBottom: "8px" }}>Kata Sandi Sekarang</label>
+                                <div className="input-group">
+                                    <input
+                                        type={showCurrentPassword ? "text" : "password"}
+                                        className="form-control rounded-start-4 border-end-0"
+                                        style={{ padding: "9.5px 12px", marginBottom: "16px" }}
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                    />
+                                    <button
+                                        onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                                        className="btn rounded-end-4 border border-start-0"
+                                        type="button"
+                                        style={{ maxHeight: "45px" }}
+                                    >
+                                        <img src={showCurrentPassword ? Images.EyeSlash : Images.Eye} alt="Toggle visibility" />
+                                    </button>
                                 </div>
-
-                                {/* Kata Sandi Baru */}
-                                <div>
-                                    <label style={{ marginBottom: "8px" }}>Kata Sandi Baru</label>
-                                    <div className="input-group">
-                                        <input
-                                            type={showNewPassword ? "text" : "password"}
-                                            className="form-control rounded-start-4 border-end-0"
-                                            style={{ padding: "9.5px 12px", marginBottom: "16px" }}
-                                            required
-                                            value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
-                                        />
-                                        <button
-                                            onClick={() => setShowNewPassword(!showNewPassword)}
-                                            className="btn rounded-end-4 border border-start-0"
-                                            type="button"
-                                            style={{ maxHeight: "45px" }}
-                                        >
-                                            <img src={showNewPassword ? Images.EyeSlash : Images.Eye} alt="Toggle visibility" />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Konfirmasi Kata Sandi Baru */}
-                                <div>
-                                    <label style={{ marginBottom: "8px" }}>Konfirmasi Kata Sandi Baru</label>
-                                    <div className="input-group">
-                                        <input
-                                            type={showConfirmPassword ? "text" : "password"}
-                                            className="form-control rounded-start-4 border-end-0"
-                                            style={{ padding: "9.5px 12px", marginBottom: "16px" }}
-                                            required
-                                            value={confirmNewPassword}
-                                            onChange={(e) => setConfirmNewPassword(e.target.value)}
-                                        />
-                                        <button
-                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            className="btn rounded-end-4 border border-start-0"
-                                            type="button"
-                                            style={{ maxHeight: "45px" }}
-                                        >
-                                            <img src={showConfirmPassword ? Images.EyeSlash : Images.Eye} alt="Toggle visibility" />
-                                        </button>
-                                    </div>
+                            </div>
+                            <div>
+                                <label style={{ marginBottom: "8px" }}>Kata Sandi Baru</label>
+                                <div className="input-group">
+                                    <input
+                                        type={showNewPassword ? "text" : "password"}
+                                        className="form-control rounded-start-4 border-end-0"
+                                        style={{ padding: "9.5px 12px", marginBottom: "16px" }}
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                    />
+                                    <button
+                                        onClick={() => setShowNewPassword(!showNewPassword)}
+                                        className="btn rounded-end-4 border border-start-0"
+                                        type="button"
+                                        style={{ maxHeight: "45px" }}
+                                    >
+                                        <img src={showNewPassword ? Images.EyeSlash : Images.Eye} alt="Toggle visibility" />
+                                    </button>
                                 </div>
                             </div>
                             <div className="d-flex mt-5 justify-content-end">
-                                <button type="button" className="btn text-white fw-semibold rounded-4" style={{ backgroundColor: "#C40C0C", padding: "9.5px 50px" }}>Simpan</button>
+                                <button
+                                    type="button"
+                                    className="btn text-white fw-semibold rounded-4"
+                                    style={{ backgroundColor: "#C40C0C", padding: "9.5px 50px" }}
+                                    onClick={handleSavePassword}
+                                >
+                                    Simpan
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </>
-    )
+    );
 }
 
-export default Profil
+export default Profil;

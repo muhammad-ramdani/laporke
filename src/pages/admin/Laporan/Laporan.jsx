@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Images from "../../../images";
 import { deleteLaporan, getLaporan } from "../../../services/services";
 import { toast } from "react-toastify";
+import "./laporan.css";
 
 function Laporan() {
   const [searchText, setSearchText] = useState("");
@@ -11,12 +12,12 @@ function Laporan() {
   const [error, setError] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
 
-  // Fungsi untuk refresh data
+
   const setRefresh = async () => {
     try {
       setLoading(true);
       const newData = await getLaporan();
-      console.log("Data setelah refresh:", newData); // Debugging untuk memastikan data di-refresh
+      console.log("Data setelah refresh:", newData); 
       setData(newData);
     } catch (err) {
       setError("Gagal memuat laporan");
@@ -27,11 +28,11 @@ function Laporan() {
   };
 
   useEffect(() => {
-    setRefresh(); // Memuat data awal saat komponen pertama kali dirender
+    setRefresh(); 
   }, []);
 
   const handleOpenDeleteModal = (id) => {
-    setDeleteId(id); // Menyimpan id laporan yang akan dihapus ke dalam state
+    setDeleteId(id); 
   };
 
   const handleDelete = async () => {
@@ -47,25 +48,22 @@ function Laporan() {
       if (result && result.status === true) {
         toast.success("Laporan berhasil dihapus");
 
-        // Memanggil setRefresh untuk memuat ulang data setelah penghapusan
-        await setRefresh(); // Pastikan data di-refresh setelah penghapusan
+  
+        await setRefresh(); 
 
-        // Setelah penghapusan berhasil, refresh halaman
-        window.location.reload(); // Refresh halaman hanya setelah penghapusan berhasil
+        window.location.reload(); 
         setDeleteId(null);
       } else {
-        // Menampilkan pesan kesalahan jika status bukan true
+
         toast.error("Laporan gagal dihapus");
       }
     } catch (error) {
       console.error("Error deleting laporan:", error);
 
-      // Menangani error lain seperti kesalahan jaringan atau server
       toast.error("Gagal menghapus laporan");
     }
   };
 
-  // Filter daftar aduan berdasarkan input pencarian
   const filteredLaporan = data.filter((item) => {
     const searchLower = searchText.toLowerCase();
     return item.title.toLowerCase().includes(searchLower) || item.location.toLowerCase().includes(searchLower) || item.status.toLowerCase().includes(searchLower);
@@ -84,7 +82,14 @@ function Laporan() {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="loader-container">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+
   if (error) return <p>{error}</p>;
 
   return (
