@@ -26,6 +26,8 @@ import LogoRingkasan from "./assets/LogoRingkasan.svg"
 import LogoSearch from "./assets/LogoSearch.svg"
 import LogoSearchButton from "./assets/LogoSearchButton.svg"
 import LogoTextLaporke from "./assets/LogoTextLaporke.svg"
+import EyeSlash from "./assets/EyeSlash.svg"
+import Eye from "./assets/Eye.svg"
 
 const Images = {
     BGCTABanner,
@@ -56,6 +58,8 @@ const Images = {
     LogoSearch,
     LogoSearchButton,
     LogoTextLaporke,
+    EyeSlash,
+    Eye,
 }
 
 export default Images
