@@ -93,6 +93,7 @@ export const deleteLaporan = async (id) => {
 
 
 
+// Public
 // export const laporPengaduan = async (data, id, callback) => {
 //     try {
 //       const response = await axios.post(
@@ -154,6 +155,29 @@ export const deleteLaporan = async (id) => {
 
 
 export const daftarAduan = async () => {
+    try {
+      const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-all`);
+      toast.success('Daftar aduan berhasil dimuat!');
+      return data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          toast.error(`Error: ${error.response.data.message || 'Gagal memuat daftar aduan'}`);
+        } else if (error.request) {
+          toast.error('Error: Tidak ada respons dari server. Periksa koneksi Anda.');
+        } else {
+          toast.error(`Error: ${error.message}`);
+        }
+      } else {
+        toast.error(`Error: ${error.message}`);
+      }
+      console.error(error);
+      throw error;
+    }
+  };
+
+
+  export const getImage = async () => {
     try {
       const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}/laporan/get-all`);
       toast.success('Daftar aduan berhasil dimuat!');

@@ -235,9 +235,9 @@ function Laporan() {
                   className="btn border-0 mx-0 mb-0 rounded-4 text-white"
                   style={{ backgroundColor: "#C40C0C", marginTop: "12px", padding: "8px 25.2px" }}
                   onClick={() => {
-                    const laporanIndex = items.findIndex((item) => item.id === selectedLaporan.id);
+                    const laporanIndex = data.findIndex((item) => item.id === selectedLaporan.id);
                     if (laporanIndex !== -1) {
-                      items[laporanIndex].status = selectedLaporan.status;
+                      data[laporanIndex].status = selectedLaporan.status;
                     }
                     document.getElementById("modalDetail").click();
                   }}
