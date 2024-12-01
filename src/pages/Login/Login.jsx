@@ -13,11 +13,16 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Hindari reload halaman
+    e.preventDefault(); 
     setIsLoading(true);
 
     const result = await loginAdmin(username, password);
     setIsLoading(false);
+
+    if (!result || typeof result !== "object") {
+      toast.error("Terjadi kesalahan, silakan coba lagi.");
+      return;
+    }
 
     if (result.success) {
       toast.success("Login berhasil!");
@@ -38,11 +43,13 @@ function Login() {
                 src={Images.LogoLaporke}
                 style={{ maxWidth: "70px", width: "100%" }}
                 className="mb-3 me-sm-3"
+                alt="logo"
               />
               <img
                 src={Images.LogoTextLaporke}
                 style={{ maxWidth: "289px", width: "100%" }}
                 className="mb-3"
+                alt="logo-text"
               />
             </div>
             <p className="mb-0 fw-semibold">Memberdayakan Komunitas, Menyelesaikan Bersama.</p>
