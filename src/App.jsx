@@ -7,6 +7,8 @@ import Dashboard from './pages/admin/Dashboard/Dashboard'
 import Laporan from './pages/admin/Laporan/Laporan'
 import Profil from './pages/admin/Profil/Profil'
 import Login from './pages/Login/Login'
+import 'react-toastify/dist/ReactToastify.css';
+import PrivateRoutes from './utils/PrivateRoutes.jsx'
 
 function App() {
 
@@ -17,10 +19,12 @@ function App() {
                     <Route index element={<Pengaduan />} />
                     <Route path="daftar-aduan" element={<DaftarAduan />} />
                 </Route>
-                <Route path="/admin/" element={<LayoutAdmin />}>
-                    <Route index element={<Dashboard />} />
-                    <Route path="laporan" element={<Laporan />} />
-                    <Route path="profil" element={<Profil />} />
+                <Route element={<PrivateRoutes />}>
+                    <Route path="/admin/" element={<LayoutAdmin />} exact>
+                        <Route index element={<Dashboard />} />
+                        <Route path="laporan" element={<Laporan />} />
+                        <Route path="profil" element={<Profil />} />
+                    </Route>
                 </Route>
                 <Route path="/login" element={<Login />} />
             </Routes>

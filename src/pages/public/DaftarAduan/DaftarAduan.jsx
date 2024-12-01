@@ -1,38 +1,11 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
+import { toast } from "react-toastify" 
 import styled from "styled-components"
 import Images from "../../../images"
 import LogoLocation from "../../../assets/LogoLokasi.svg"
+import { daftarAduan } from "../../../services/services"
 
-const aduan = [
-    {
-        id: 1,
-        name: "Anthony Nunez",
-        gambar: Images.FotoJalanBolong,
-        status: "Belum diproses",
-        lokasi: "Jl. Dr.Angka (depan rumah pak saber)",
-        judul: "Jalannya bolong di dekat irigasi",
-        isi: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae porta dolor. Nunc feugiat volutpat nisl, vel tincidunt velit ultricies id. Praesent a velit a tellus pellentesque tempus. Duis tincidunt, libero a condimentum dignissim, nisi mauris fringilla quam, sit amet suscipit eros metus nec justo. Quisque dignissim nisl ut nibh venenatis commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; "
-    },
-    {
-        id: 2,
-        name: "Kur",
-        gambar: Images.FotoJalanBolong,
-        status: "Sedang diproses",
-        lokasi: "Jl. Banteran banteran, Purwokerto Utara, Purwokerto pwt pwt",
-        judul: "Sebagian lampu di RW 10 mati",
-        isi: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae porta dolor. Nunc feugiat volutpat nisl, vel tincidunt velit ultricies id. Praesent a velit a tellus pellentesque tempus. Duis tincidunt, libero a condimentum dignissim, nisi mauris fringilla quam, sit amet suscipit eros metus nec justo. Quisque dignissim nisl ut nibh venenatis commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; "
-    },
-    {
-        id: 3,
-        name: "Kur",
-        gambar: Images.FotoJalanBolong,
-        status: "Telah selesai",
-        lokasi: "Desa Banteran",
-        judul: "Brantas motor yang pakai knalpot brong",
-        isi: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vitae porta dolor. Nunc feugiat volutpat nisl, vel tincidunt velit ultricies id. Praesent a velit a tellus pellentesque tempus. Duis tincidunt, libero a condimentum dignissim, nisi mauris fringilla quam, sit amet suscipit eros metus nec justo. Quisque dignissim nisl ut nibh venenatis commodo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; "
-    },
-]
 
 const ImageContainer = styled.div`
     max-width: 244px;
@@ -45,17 +18,31 @@ const ImageContainer = styled.div`
 `;
 
 function DaftarAduan() {
-
+    const [aduan, setAduan] = useState([])
     const [selectedAduan, setSelectedAduan] = useState(null)
     const [searchText, setSearchText] = useState("")
+
+
+    useEffect(() => {
+        const fetchAduan = async () => {
+            try {
+                const data = await daftarAduan() 
+                setAduan(data.data) 
+            // eslint-disable-next-line no-unused-vars
+            } catch (error) {
+                toast.error('Gagal memuat daftar aduan');
+            }
+        }
+        fetchAduan()
+    }, [])
 
     // Filter daftar aduan berdasarkan input pencarian
     const filteredAduan = aduan.filter((item) => {
         const searchLower = searchText.toLowerCase()
         return (
-            item.judul.toLowerCase().includes(searchLower) ||
+            item.title.toLowerCase().includes(searchLower) ||
             item.status.toLowerCase().includes(searchLower) ||
-            item.lokasi.toLowerCase().includes(searchLower)
+            item.location.toLowerCase().includes(searchLower)
         );
     })
 
@@ -92,8 +79,8 @@ function DaftarAduan() {
                     </div>
                 </div>
 
-            ) : (
-
+            ) 
+            : (
                 <>
                     {/* Jika hasil pencarian tidak ditemukan */}
                     {filteredAduan.length === 0 ? (
@@ -109,21 +96,20 @@ function DaftarAduan() {
                         </div>
 
                     ) : (
-
                         // Jika ada laporan yang sesuai dengan pencarian
                         filteredAduan.map((item) => (
                             <div key={item.id} className="card border-0 rounded-4 shadow mx-auto p-4 mb-3" style={{ maxWidth: "980.33px" }}>
                                 <div className="row mx-0 align-items-center">
                                     {/* column gambar */}
-                                    <div className="col-12 mx-auto ms-md-0 me-md-3 px-0 rounded-4" style={{ maxWidth: "274.33px", height: "222px", background: `url(${item.gambar}) no-repeat center`, backgroundSize: "cover" }}></div>
+                                    <div className="col-12 mx-auto ms-md-0 me-md-3 px-0 rounded-4" style={{ maxWidth: "274.33px", height: "222px", background: `url(${item.photo}) no-repeat center`, backgroundSize: "cover" }}></div>
 
                                     {/* column content */}
                                     <div className="col-12 col-md px-0 mt-3 mt-md-0">
                                         <div className="row mx-0">
                                             <div className="col-12 col-sm px-0">
-                                                <h4 className="mb-3 lh-base">{item.judul}</h4>
+                                                <h4 className="mb-3 lh-base">{item.title}</h4>
                                             </div>
-                                            <div className="col-auto px-3 py-1 rounded-pill mb-3 mb-sm-auto ms-sm-3" style={{ backgroundColor: item.status === "Belum diproses" ? "#FCDDCC" : item.status === "Sedang diproses" ? "#FFF7CC" : item.status === "Telah selesai" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: item.status === "Belum diproses" ? "#C40C0C" : item.status === "Sedang diproses" ? "#DBA000" : item.status === "Telah selesai" ? "#00C17A" : "inherit" }}>{item.status}</div>
+                                            <div className="col-auto px-3 py-1 rounded-pill mb-3 mb-sm-auto ms-sm-3" style={{ backgroundColor: item.status === "open" ? "#FCDDCC" : item.status === "pending" ? "#FFF7CC" : item.status === "closed" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: item.status === "open" ? "#C40C0C" : item.status === "pending" ? "#DBA000" : item.status === "closed" ? "#00C17A" : "inherit" }}>{item.status === "open" ? "Belum diproses" : item.status === "pending" ? "Sedang diproses" : item.status === "closed" ? "Telah selesai" : item.status}</div>
                                         </div>
 
                                         <div className="row mx-0 mb-3">
@@ -131,7 +117,7 @@ function DaftarAduan() {
                                                 <img src={LogoLocation} className="me-1" />
                                             </div>
                                             <div className="col px-0">
-                                                <p className="mb-0">{item.lokasi}</p>
+                                                <p className="mb-0">{item.location}</p>
                                             </div>
                                         </div>
 
@@ -147,32 +133,34 @@ function DaftarAduan() {
             {/* Modal Detail Aduan */}
             <div className="modal fade" id="ModalDetailAduan" data-bs-backdrop="static" style={{ backdropFilter: "blur(5px)", backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
                 <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: "1052px" }}>
-                    <div className="modal-content border-0 rounded-4 p-4" style={{ maxWidth: "1052px", marginLeft: "20px", marginRight: "20px" }}>
+                    <div className="modal-content border-0 rounded-4 p-4">
                         <div className="modal-header border-0 p-0 mb-4">
-                            <h4 className="mb-0" id="exampleModalLabel">Detail Aduan</h4>
-                            <button type="button" className="btn ms-auto border-0" data-bs-dismiss="modal" style={{ padding: "2px" }}><img src={Images.LogoClose} /></button>
+                            <h4 className="mb-0">Detail Aduan</h4>
+                            <button type="button" className="btn ms-auto border-0" data-bs-dismiss="modal" style={{ padding: "2px" }}>
+                                <img src={Images.LogoClose} />
+                            </button>
                         </div>
 
                         <div className="modal-body p-0">
-                            {selectedAduan && (
+                            {selectedAduan ? (
                                 <div className="row mx-0">
                                     <div className="col-12 col-md-auto px-0 me-md-4">
                                         <p className="mb-3" style={{ color: "#828282", fontSize: "18px" }}>Gambar Laporan</p>
                                         <ImageContainer className="mx-auto mb-3">
-                                            <img src={selectedAduan.gambar} className="object-fit-cover w-100 h-100 rounded-4" />
+                                            <img src={selectedAduan.photo} className="object-fit-cover w-100 h-100 rounded-4" />
                                         </ImageContainer>
-                                        <div className="d-inline-flex px-3 py-1 rounded-pill mb-3" style={{ backgroundColor: selectedAduan.status === "Belum diproses" ? "#FCDDCC" : selectedAduan.status === "Sedang diproses" ? "#FFF7CC" : selectedAduan.status === "Telah selesai" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: selectedAduan.status === "Belum diproses" ? "#C40C0C" : selectedAduan.status === "Sedang diproses" ? "#DBA000" : selectedAduan.status === "Telah selesai" ? "#00C17A" : "inherit" }}>{selectedAduan.status}</div>
+                                        <div className="d-inline-flex px-3 py-1 rounded-pill mb-3" style={{ backgroundColor: selectedAduan.status === "open" ? "#FCDDCC" : selectedAduan.status === "pending" ? "#FFF7CC" : selectedAduan.status === "closed" ? "rgba(0, 193, 122, 0.1)" : "transparent", color: selectedAduan.status === "open" ? "#C40C0C" : selectedAduan.status === "pending" ? "#DBA000" : selectedAduan.status === "closed" ? "#00C17A" : "inherit" }}>{selectedAduan.status === "open" ? "Belum diproses" : selectedAduan.status === "pending" ? "Sedang diproses" : selectedAduan.status === "closed" ? "Telah selesai" : selectedAduan.status}</div>
                                     </div>
 
                                     <div className="col-12 col-md px-0">
                                         <div className="mb-4">
                                             <p className="mb-2" style={{ color: "#828282", fontSize: "18px" }}>Judul Laporan</p>
-                                            <h3 className="mb-0 fw-semibold lh-base" style={{ color: "#C40C0C" }}>{selectedAduan.judul}</h3>
+                                            <h3 className="mb-0 fw-semibold" style={{ color: "#C40C0C" }}>{selectedAduan.title}</h3>
                                         </div>
 
                                         <div className="mb-4">
                                             <p className="mb-2" style={{ color: "#828282", fontSize: "18px" }}>Isi Laporan</p>
-                                            <p className="mb-0" style={{ fontSize: "14px", lineHeight: "24px" }}>{selectedAduan.isi}</p>
+                                            <p className="mb-0" style={{ fontSize: "14px", lineHeight: "24px" }}>{selectedAduan.description}</p>
                                         </div>
 
                                         <div className="row mx-0">
@@ -184,12 +172,14 @@ function DaftarAduan() {
                                                 <p className="mb-2" style={{ color: "#828282", fontSize: "18px" }}>Lokasi</p>
                                                 <p className="mb-0">
                                                     <img src={LogoLocation} className="me-1" />
-                                                    {selectedAduan.lokasi}
+                                                    {selectedAduan.location}
                                                 </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            ) : (
+                                <p>Loading...</p>
                             )}
                         </div>
 
@@ -199,8 +189,7 @@ function DaftarAduan() {
                     </div>
                 </div>
             </div>
-
-        </div >
+        </div>
     )
 }
 

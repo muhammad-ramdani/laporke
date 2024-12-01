@@ -1,17 +1,21 @@
-import { Outlet, Link, useLocation } from "react-router-dom"
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import "./LayoutAdmin.css"
 import Images from "../../../images"
+import { toast, ToastContainer } from "react-toastify";
+import { logOut } from "../../../services/services";
 
 
 function LayoutAdmin() {
     const [isMini, setIsMini] = useState(false)
+    const location = useLocation();
+    const navigate = useNavigate();
+
 
     const toggleSidebar = () => {
         setIsMini(!isMini)
     }
 
-    const location = useLocation()
 
     const getTextByPath = (pathname) => {
         switch (pathname) {
@@ -24,8 +28,21 @@ function LayoutAdmin() {
         }
     }
 
+    const handleLogout = async () => {
+        try {
+            await logOut(); 
+            toast.success("Logout berhasil!"); 
+            setTimeout(() => {
+                navigate("/login");
+            },0);
+        } catch (error) {
+            toast.error(error.message); 
+        }
+    };
+
     return (
         <div className="d-flex w-100">
+            <ToastContainer />
             {/* Navbar Samping */}
             <div className={`sidebar-layout-admin ${isMini ? "mini" : ""}`}>
                 <div className="d-flex" style={{ marginBottom: "84px" }}>
@@ -55,10 +72,10 @@ function LayoutAdmin() {
                 </ul>
 
                 <div className="mt-auto">
-                    <Link to="/" className="nav-link d-flex">
+                    <button  className="nav-link d-flex" onClick={handleLogout}>
                         <img src={Images.LogoLogout} width={24} />
-                        {!isMini && <span className="fw-medium ms-3 fs-5" style={{ color: "#C40C0C" }}>Profile</span>}
-                    </Link>
+                        {!isMini && <span className="fw-medium ms-3 fs-5" style={{ color: "#C40C0C" }}>Keluar</span>}
+                    </button>
                 </div>
             </div>
 
