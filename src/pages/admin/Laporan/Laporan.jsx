@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Images from "../../../images";
 import { deleteLaporan, getLaporan, updateLaporanStatus } from "../../../services/services";
 import { toast } from "react-toastify";
+import "./laporan.css";
 
 function Laporan() {
     const [searchText, setSearchText] = useState("");
