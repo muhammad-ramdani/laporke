@@ -35,35 +35,35 @@ api.interceptors.response.use(
 
 
 export const loginAdmin = async (username, password) => {
-  try {
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
-      username,
-      password,
-    });
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+            username,
+            password,
+        });
 
-    if (response.data && response.data.access_token) {
-      return {
-        success: true,
-        data: response.data,
-      };
-    }
+        if (response.data && response.data.access_token) {
+            return {
+                success: true,
+                data: response.data,
+            };
+        }
 
-    return {
-      success: false,
-      message: "Login gagal, token tidak ditemukan.",
-    };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      return {
-        success: false,
-        message: error.response?.data?.message || "Kesalahan server, silakan coba lagi.",
-      };
+        return {
+            success: false,
+            message: "Login gagal, token tidak ditemukan.",
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            return {
+                success: false,
+                message: error.response?.data?.message || "Kesalahan server, silakan coba lagi.",
+            };
+        }
+        return {
+            success: false,
+            message: "Terjadi kesalahan jaringan.",
+        };
     }
-    return {
-      success: false,
-      message: "Terjadi kesalahan jaringan.",
-    };
-  }
 };
 
 
