@@ -1,11 +1,10 @@
-import BGCTABanner from "./assets/BGCTABanner.png"
-import BGHeroSection from "./assets/BGHeroSection.png"
-import FotoJalanBolong from "./assets/FotoJalanBolong.png"
+import BGCTABanner from "./assets/BGCTABanner.webp"
+import BGHeroSection from "./assets/BGHeroSection.webp"
 import IconSelesai from "./assets/IconSelesai.svg"
 import IconTindakLanjut from "./assets/IconTindakLanjut.svg"
 import IconTulisLaporan from "./assets/IconTulisLaporan.svg"
 import IconVerifikasiLaporan from "./assets/IconVerifikasiLaporan.svg"
-import ImageAboutLaporke from "./assets/ImageAboutLaporke.png"
+import ImageAboutLaporke from "./assets/ImageAboutLaporke.webp"
 import ImageBerhasilInput from "./assets/ImageBerhasilInput.png"
 import ImageLogin from "./assets/ImageLogin.png"
 import ImagesTidakAdaPencarian from "./assets/ImagesTidakAdaPencarian.png"
@@ -32,7 +31,6 @@ import Eye from "./assets/Eye.svg"
 const Images = {
     BGCTABanner,
     BGHeroSection,
-    FotoJalanBolong,
     IconSelesai,
     IconTindakLanjut,
     IconTulisLaporan,

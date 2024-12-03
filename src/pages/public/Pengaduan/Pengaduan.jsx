@@ -165,7 +165,7 @@ function Pengaduan() {
                                 <div style={{ marginBottom: "32px" }}>
                                     <div>
                                         <label htmlFor="formFile" style={{ marginBottom: "8px" }}>
-                                            Default file input example
+                                            Tambahkan Gambar
                                         </label>
                                         <input className="form-control" type="file" id="formfile" accept="image/*" onChange={handleFileChange} style={{ padding: "9.5px 12px", marginBottom: "16px" }} required />
                                     </div>
@@ -304,7 +304,7 @@ function Pengaduan() {
 
             {/* Modal */}
             {showModal && (
-                <div className="modal fade show" style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}>
+                <div className="modal fade show" style={{ display: "block", backdropFilter: "blur(5px)", backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
                     <div className="modal-dialog modal-dialog-centered" style={{ maxWidth: "448px" }}>
                         <div className="modal-content border-0 rounded-4" style={{ maxWidth: "448px" }}>
                             <div className="modal-body p-4 text-center">

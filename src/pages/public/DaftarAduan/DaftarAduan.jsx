@@ -195,6 +195,33 @@ function DaftarAduan() {
                     </div>
                 </div>
             </div>
+
+            {/* Footer */}
+            <footer className="border-top border-dark-subtle" style={{ margin: "80px -20px 0px -20px", padding: "37px 0px" }}>
+                <div className="row mx-auto align-items-center" style={{ maxWidth: "1170px" }}>
+                    {/* Logo */}
+                    <div className="col-12 px-0 mx-auto ms-sm-4 me-sm-0 ms-xl-0" style={{ maxWidth: "188px", margin: "37px 0px" }}>
+                        <img src={Images.LogoLaporke} style={{ maxWidth: "188px" }} />
+                    </div>
+
+                    {/* Laporke */}
+                    <div className="col-12 col-sm-6 col-md-7 col-lg-5 col-xl-12 px-4 px-sm-0 mx-auto me-sm-4 me-lg-auto" style={{ maxWidth: "545px", margin: "37px 0px" }}>
+                        <h4 className="fw-bold lh-base mb-1">LAPORKE!</h4>
+                        <p className="mb-0">
+                            <span className="fw-semibold">LAPORKE!</span> adalah platform aduan bagi warga desa Banteran, Banyumas. Sampaikan suara Anda untuk perbaikan layanan dan infrastruktur desa dengan proses yang transparan dan akuntabel.
+                            Bersama, kita bangun Banteran lebih baik!
+                        </p>
+                    </div>
+
+                    {/* Kontak */}
+                    <div className="col-12 px-0 ms-4 ms-lg-0 me-lg-4 me-xl-0" style={{ maxWidth: "229px", margin: "37px 0px" }}>
+                        <h5 className="lh-base mb-3">Kontak</h5>
+                        <p style={{ marginBottom: "12px" }}>Purwokerto - Indonesia</p>
+                        <p style={{ marginBottom: "12px" }}>+0628-2267-9981</p>
+                        <p className="mb-0">desabanyumas@gmail.com</p>
+                    </div>
+                </div>
+            </footer>
         </div>
     )
 }
