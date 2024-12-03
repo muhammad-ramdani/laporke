@@ -56,7 +56,7 @@ function Profil() {
                     <ul className="nav nav-tabs">
                         <li>
                             <button className="nav-link text-black active" data-bs-toggle="tab" data-bs-target="#edit-profil">
-                                Edit Profil
+                                Profil
                             </button>
                         </li>
                         <li>
@@ -67,38 +67,17 @@ function Profil() {
                     </ul>
                     <div className="tab-content mt-5">
                         <div className="tab-pane show active" id="edit-profil">
-                            <div>
-                                <label htmlFor="inputEmail" style={{ marginBottom: "8px" }}>
+                            <div className="mb-4">
+                                <label htmlFor="inputEmail" className="text-secondary" style={{ marginBottom: "8px" }}>
                                     Email
                                 </label>
-                                <input
-                                    type="email"
-                                    className="form-control"
-                                    id="inputEmail"
-                                    placeholder="Email"
-                                    style={{ padding: "9.5px 12px", marginBottom: "16px" }}
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)} // Update state email
-                                />
+                                <p className="mb-0 fw-semibold">{email}</p>
                             </div>
                             <div>
-                                <label htmlFor="inputUsername" style={{ marginBottom: "8px" }}>
+                                <label htmlFor="inputUsername" className="text-secondary" style={{ marginBottom: "8px" }}>
                                     Username
                                 </label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="inputUsername"
-                                    placeholder="Username"
-                                    style={{ padding: "9.5px 12px", marginBottom: "16px" }}
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)} // Update state username
-                                />
-                            </div>
-                            <div className="d-flex mt-5 justify-content-end">
-                                <button type="button" className="btn text-white fw-semibold rounded-4" style={{ backgroundColor: "#C40C0C", padding: "9.5px 50px" }} onClick={() => console.log("Simpan perubahan profil")}>
-                                    Simpan
-                                </button>
+                                <p className="mb-0 fw-semibold">{username}</p>
                             </div>
                         </div>
                         <div className="tab-pane" id="keamanan">
