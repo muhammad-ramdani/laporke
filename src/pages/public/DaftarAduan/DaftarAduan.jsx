@@ -21,6 +21,8 @@ function DaftarAduan() {
     const [aduan, setAduan] = useState([])
     const [selectedAduan, setSelectedAduan] = useState(null)
     const [searchText, setSearchText] = useState("")
+    const [currentPage, setCurrentPage] = useState(1)
+    const itemsPerPage = 5
 
 
     useEffect(() => {
@@ -36,15 +38,28 @@ function DaftarAduan() {
         fetchAduan()
     }, [])
 
+    // Handler untuk mengganti halaman
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber); // Perbarui state currentPage
+    };
+
     // Filter daftar aduan berdasarkan input pencarian
     const filteredAduan = aduan.filter((item) => {
-        const searchLower = searchText.toLowerCase()
+        const searchLower = searchText.toLowerCase();
         return (
             item.title.toLowerCase().includes(searchLower) ||
             item.status.toLowerCase().includes(searchLower) ||
             item.location.toLowerCase().includes(searchLower)
         );
-    })
+    });
+
+    // Pagination logic
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredAduan.slice(indexOfFirstItem, indexOfLastItem);
+
+    const totalPages = Math.ceil(filteredAduan.length / itemsPerPage);
+
 
     // Handler untuk membuka modal dan mengatur aduan yang dipilih
     const handleDetailClick = (id) => {
@@ -97,7 +112,7 @@ function DaftarAduan() {
 
                         ) : (
                             // Jika ada laporan yang sesuai dengan pencarian
-                            filteredAduan.map((item) => (
+                            currentItems.map((item) => (
                                 <div key={item.id} className="card border-0 rounded-4 shadow mx-auto p-4 mb-3" style={{ maxWidth: "980.33px" }}>
                                     <div className="row mx-0 align-items-center">
                                         {/* column gambar */}
@@ -131,8 +146,34 @@ function DaftarAduan() {
                                 </div>
                             ))
                         )}
+
+                        {/* Pagination */}
+                        <nav className="mt-5">
+                            <ul className="pagination justify-content-center">
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <li
+                                        key={index}
+                                        className={`page-item ${index + 1 === currentPage ? "active" : ""}`}
+                                    >
+                                        <button
+                                            className="page-link focus-ring"
+                                            style={{
+                                                '--bs-focus-ring-width': '0px', 
+                                                backgroundColor: index + 1 === currentPage ? '#C40C0C' : '',
+                                                borderColor: '#C40C0C',
+                                                color: index + 1 === currentPage ? '#ffffff' : '#C40C0C',
+                                            }}
+                                            onClick={() => handlePageChange(index + 1)}
+                                        >
+                                            {index + 1}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
                     </>
-                )}
+                )
+            }
 
             {/* Modal Detail Aduan */}
             <div className="modal fade" id="ModalDetailAduan" data-bs-backdrop="static" style={{ backdropFilter: "blur(5px)", backgroundColor: "rgba(0, 0, 0, 0.1)" }}>
@@ -222,7 +263,7 @@ function DaftarAduan() {
                     </div>
                 </div>
             </footer>
-        </div>
+        </div >
     )
 }
 
