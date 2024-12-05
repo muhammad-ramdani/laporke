@@ -53,7 +53,7 @@ function Laporan() {
                 await setRefresh(); // Pastikan data di-refresh setelah penghapusan
 
                 // Setelah penghapusan berhasil, refresh halaman
-                window.location.reload(); // Refresh halaman hanya setelah penghapusan berhasil
+                // window.location.reload();
                 setDeleteId(null);
             } else {
                 // Menampilkan pesan kesalahan jika status bukan true
@@ -108,9 +108,9 @@ function Laporan() {
             }
 
             // Tambahkan jeda 5 detik sebelum refresh halaman
-            setTimeout(() => {
-                window.location.reload(); // Refresh halaman
-            }, 5000);
+            // setTimeout(() => {
+            //     window.location.reload(); // Refresh halaman
+            // }, 5000);
         }
     };
 
